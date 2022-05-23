@@ -1,6 +1,6 @@
 import React from 'react';
-import doctor from '../../assets/images/doctor.png'
-import appointment from '../../assets/images/appointment.png'
+import doctor from '../../assets/images/doctor.png';
+import appointment from '../../assets/images/appointment.png';
 import PrimaryButton from '../Shared/PrimaryButton';
 
 const MakeAppointment = () => {
