@@ -4,16 +4,19 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import auth from '../../firebase.init';
 import Loading from '../Shared/Loading';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { sendEmailVerification } from 'firebase/auth';
 
 const SignUp = () => {
-    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const { register, formState: { errors }, handleSubmit } = useForm();
+    const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [
         createUserWithEmailAndPassword,
         user,
         loading,
         error,
-    ] = useCreateUserWithEmailAndPassword(auth);
+    ] = useCreateUserWithEmailAndPassword(auth, {sendEmailVerification: true});
 
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
@@ -37,10 +40,16 @@ const SignUp = () => {
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
         console.log('update done');
+        if(createUserWithEmailAndPassword){
+            toast('Create Account Successful')
+        }
+        else{
+            toast('update done')
+        }
         navigate('/appointment');
     }
     return (
-        <div className='flex h-screen justify-center items-center'>
+        <div className='flex justify-center items-center my-10 md:my-32'>
             <div className="card w-96 bg-base-100 shadow-xl">
                 <div className="card-body">
                     <h2 className="text-center text-2xl font-bold">Sign Up</h2>

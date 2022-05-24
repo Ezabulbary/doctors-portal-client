@@ -4,6 +4,9 @@ import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
@@ -38,8 +41,19 @@ const Login = () => {
         signInWithEmailAndPassword(data.email, data.password);
     }
 
+    // const resetPassword = async () => {
+    //     const email = ?;
+    //     if (email) {
+    //         await sendPasswordResetEmail(email);
+    //         toast('Sent email');
+    //     }
+    //     else {
+    //         toast('please enter your email address');
+    //     }
+    // }
+
     return (
-        <div className='flex h-screen justify-center items-center'>
+        <div className='flex justify-center items-center my-10 md:my-32'>
             <div className="card w-96 bg-base-100 shadow-xl">
                 <div className="card-body">
                     <h2 className="text-center text-2xl font-bold">Login</h2>
@@ -98,6 +112,7 @@ const Login = () => {
                         <input className='btn w-full max-w-xs text-white' type="submit" value="Login" />
                     </form>
                     <p><small>New to Doctors Portal <Link className='text-primary' to="/signup">Create New Account</Link></small></p>
+                    <p><small>Forget Password? <button className='text-primary'>Reset Password</button> </small></p>
                     <div className="divider">OR</div>
                     <button
                         onClick={() => signInWithGoogle()}
