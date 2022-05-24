@@ -4,7 +4,7 @@ import footer from '../../assets/images/footer.png';
 
 const Footer = () => {
     return (
-        <footer style={{ background: `url(${footer})`, backgroundSize: 'cover' }} class="mx-auto">
+        <footer style={{ background: `url(${footer})`, backgroundSize: 'cover' }} className="mx-auto">
             <div className='footer p-20 mx-auto'>
                 <div>
                     <span className="footer-title">Services</span>
@@ -34,7 +34,7 @@ const Footer = () => {
                     <Link to='/' className="link link-hover">Github</Link>
                 </div>
             </div>
-            <div class="text-center px-10 py-10 border-t border-base-300">
+            <div className="text-center px-10 py-10 border-t border-base-300">
                 <p>Copyright © 2022 - All right reserved by Doctor Portal Ltd</p>
             </div>
         </footer>
