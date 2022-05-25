@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import auth from '../../firebase.init';
 
-const BookingModal = ({ date, treatment, setTreatment }) => {
+const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
     const { _id, name, slots } = treatment;
     const [user, loading, error] = useAuthState(auth);
-    const formattedDate = format(date, 'pp');
+    const formattedDate = format(date, 'PP');
 
     const handleBooking = event => {
         event.preventDefault();
@@ -34,10 +34,14 @@ const BookingModal = ({ date, treatment, setTreatment }) => {
         })
         .then(res => res.json())
         .then(data => {
-            if (data) {
-                toast('Your Appointment is Approved')
+            console.log(data)
+            if (data.success) {
+                toast(`Your Appointment is set, ${formattedDate} at ${slot}`)
             }
-            // to close the modal
+            else{
+                toast.error(`Already have an Appointment on, ${data.booking?.date} at ${data.booking?.slot}`)
+            }
+            refetch()
             setTreatment(null);
         })
         

@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import Service from './Service';
 
-const AvailableServices = ({ date, services }) => {
+const AvailableServices = ({ date }) => {
+    const [services, setServices] = useState([]);
+    useEffect(() => {
+        fetch(`http://localhost:5000/services`, {
+            "method": "GET",
+            "headers": {
+                'Content-Type': 'application/json',
+            }
+        })
+            .then(res => res.json())
+            .then(data => setServices(data))
+    }, []);
+    
     return (
         <div className='my-24'>
             <div className='text-center'>
