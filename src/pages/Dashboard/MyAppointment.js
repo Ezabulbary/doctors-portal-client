@@ -6,8 +6,8 @@ const MyAppointment = () => {
     const [user] = useAuthState(auth);
     const [appointments, setAppointments] = useState([]);
 
-    useEffect(() =>{
-        if(user){
+    useEffect(() => {
+        if (user) {
             fetch(`http://localhost:5000/booking?patient=${user.email}`)
                 .then(res => res.json())
                 .then(data => setAppointments(data))
@@ -17,8 +17,8 @@ const MyAppointment = () => {
     return (
         <div className='text-center lg:text-left'>
             <h2>My Appointment {appointments.length}</h2>
-            <div class="overflow-x-auto">
-                <table class="table w-full">
+            <div className="overflow-x-auto">
+                <table className="table w-full">
                     <thead>
                         <tr className='text-uppercase'>
                             <th></th>
@@ -30,7 +30,7 @@ const MyAppointment = () => {
                     </thead>
                     <tbody>
                         {
-                            appointments.map((a, index) => <tr>
+                            appointments.map((a, index) => <tr key={a._id}>
                                 <th>{index + 1}</th>
                                 <td>{a.patientName}</td>
                                 <td>{a.date}</td>

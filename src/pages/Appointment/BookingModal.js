@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -8,12 +9,13 @@ import auth from '../../firebase.init';
 const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
     const { _id, name, slots } = treatment;
     const [user] = useAuthState(auth);
+    const navigate = useNavigate();
     const formattedDate = format(date, 'PP');
 
     const handleBooking = event => {
         event.preventDefault();
         const slot = event.target.slot.value;
-        console.log(_id, name, slot);
+        // console.log(_id, name, slot);
 
         const booking = {
             treatmentId: _id,
@@ -43,6 +45,7 @@ const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
             }
             refetch()
             setTreatment(null);
+            navigate('/dashboard');
         })
         
     }

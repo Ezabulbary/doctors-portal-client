@@ -1,15 +1,18 @@
-import React, { useEffect } from 'react';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import React, { useEffect, useState } from 'react';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { sendPasswordResetEmail } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useToken from '../../hooks/useToken';
 
 const Login = () => {
+    const [resetEmail, setResetEmail] = useState('');
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
+    const [sendPasswordResetEmail, sending, rError] = useSendPasswordResetEmail(auth);
+
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [
         signInWithEmailAndPassword,
@@ -17,11 +20,13 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+    const [token] = useToken(user || gUser);
 
     let signInError;
     const navigate = useNavigate();
     const location = useLocation();
     let from = location.state?.from?.pathname || "/";
+
 
     useEffect(() => {
         if (user || gUser) {
@@ -37,20 +42,25 @@ const Login = () => {
         signInError = <p className='text-red-500'><small>{error?.message || gError?.message}</small></p>
     }
 
+    if (token) {
+        navigate(from, { replace: true });
+    }
+
     const onSubmit = data => {
+        setResetEmail(data.email);
         signInWithEmailAndPassword(data.email, data.password);
     }
 
-    // const resetPassword = async () => {
-    //     const email = ?;
-    //     if (email) {
-    //         await sendPasswordResetEmail(email);
-    //         toast('Sent email');
-    //     }
-    //     else {
-    //         toast('please enter your email address');
-    //     }
-    // }
+    const resetPassword = async () => {
+        console.log(resetEmail)
+        if (resetEmail) {
+            await sendPasswordResetEmail(resetEmail);
+            toast('Sent email');
+        }
+        else {
+            toast('please enter your email address');
+        }
+    }
 
     return (
         <div className='flex justify-center items-center my-10 md:my-32'>
@@ -112,7 +122,7 @@ const Login = () => {
                         <input className='btn w-full max-w-xs text-white' type="submit" value="Login" />
                     </form>
                     <p><small>New to Doctors Portal <Link className='text-primary' to="/signup">Create New Account</Link></small></p>
-                    <p><small>Forget Password? <button className='text-primary'>Reset Password</button> </small></p>
+                    <p><small>Forget Password? <button onClick={resetPassword} className='text-primary'>Reset Password</button> </small></p>
                     <div className="divider">OR</div>
                     <button
                         onClick={() => signInWithGoogle()}

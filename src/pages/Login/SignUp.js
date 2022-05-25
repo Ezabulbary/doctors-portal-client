@@ -6,7 +6,7 @@ import auth from '../../firebase.init';
 import Loading from '../Shared/Loading';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { sendEmailVerification } from 'firebase/auth';
+import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
@@ -16,10 +16,12 @@ const SignUp = () => {
         user,
         loading,
         error,
-    ] = useCreateUserWithEmailAndPassword(auth, {sendEmailVerification: true});
+    ] = useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
 
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
+    const [token] = useToken(user || gUser);
+    console.log(gUser)
     const navigate = useNavigate();
 
     let signInError;
@@ -32,22 +34,23 @@ const SignUp = () => {
         signInError = <p className='text-red-500'><small>{error?.message || gError?.message || updateError?.message}</small></p>
     }
 
-    if (user || gUser) {
-        console.log(user || gUser);
+    if (token) {
+        navigate('/appointment');
     }
 
     const onSubmit = async data => {
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
         console.log('update done');
-        if(createUserWithEmailAndPassword){
+        if (createUserWithEmailAndPassword) {
             toast('Create Account Successful')
         }
-        else{
+        else {
             toast('update done')
         }
-        navigate('/appointment');
-    }
+    };
+
+
     return (
         <div className='flex justify-center items-center my-10 md:my-32'>
             <div className="card w-96 bg-base-100 shadow-xl">
