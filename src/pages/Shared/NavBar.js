@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import auth from '../../firebase.init';
 
 const NavBar = () => {
-
     const [user] = useAuthState(auth);
 
     const logout = () => {
@@ -18,7 +17,27 @@ const NavBar = () => {
         <li><Link to='/reviews'>Reviews</Link></li>
         <li><Link to='/contact'>Contact</Link></li>
         <li><Link to='/about'>About</Link></li>
-        <li>{user ? <button className="btn btn-ghost" onClick={logout} >Sign Out</button> : <Link to="/login">Login</Link>}</li>
+        {
+            user && <li><Link to='/dashboard'>Dashboard</Link></li>
+        }
+        {
+            user
+                ?
+                <div class="dropdown dropdown-end">
+                    <label tabIndex="0" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img src={user?.photoURL} alt='profile-image' />
+                        </div>
+                    </label>
+                    <ul tabIndex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
+                        <button className="btn btn-ghost">Profile<span class="badge badge-sm ml-3">New</span></button>
+                        <button className="btn btn-ghost" >Settings</button>
+                        <button className="btn btn-ghost" onClick={logout}>Sign Out</button>
+                    </ul>
+                </div>
+                :
+                <li><Link to="/login">Login</Link></li>
+        }
     </>
     return (
         <div className="navbar bg-base-100">
@@ -37,6 +56,11 @@ const NavBar = () => {
                 <ul className="menu menu-horizontal p-0">
                     {menuItems}
                 </ul>
+            </div>
+            <div className="navbar-end lg:hidden">
+                <label tabIndex="1" for="my-drawer-2" className="btn btn-ghost drawer-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+                </label>
             </div>
         </div>
     );
