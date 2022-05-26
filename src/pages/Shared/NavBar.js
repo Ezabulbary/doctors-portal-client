@@ -9,6 +9,7 @@ const NavBar = () => {
 
     const logout = () => {
         signOut(auth);
+        localStorage.removeItem('accessToken');
     };
 
     const menuItems = <>
@@ -30,7 +31,7 @@ const NavBar = () => {
                         </div>
                     </label>
                     <ul tabIndex="0" className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                        <button className="btn btn-ghost">Profile<span className="badge badge-sm ml-3">New</span></button>
+                        <button className="btn btn-ghost btn-active">{user?.displayName}</button>
                         <button className="btn btn-ghost" >Settings</button>
                         <button className="btn btn-ghost" onClick={logout}>Sign Out</button>
                     </ul>

@@ -11,15 +11,10 @@ import useToken from '../../hooks/useToken';
 const Login = () => {
     const [resetEmail, setResetEmail] = useState('');
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
-    const [sendPasswordResetEmail, sending, rError] = useSendPasswordResetEmail(auth);
+    const [sendPasswordResetEmail, rSending, rError] = useSendPasswordResetEmail(auth);
 
     const { register, formState: { errors }, handleSubmit } = useForm();
-    const [
-        signInWithEmailAndPassword,
-        user,
-        loading,
-        error,
-    ] = useSignInWithEmailAndPassword(auth);
+    const [signInWithEmailAndPassword, user, loading, error,] = useSignInWithEmailAndPassword(auth);
     const [token] = useToken(user || gUser);
 
     let signInError;
@@ -29,21 +24,17 @@ const Login = () => {
 
 
     useEffect(() => {
-        if (user || gUser) {
+        if (token) {
             navigate(from, { replace: true });
         }
-    }, [user, gUser, from, navigate])
+    }, [token, from, navigate])
 
-    if (loading || gLoading) {
+    if (loading || gLoading || rSending) {
         return <Loading></Loading>
     }
 
-    if (error || gError) {
-        signInError = <p className='text-red-500'><small>{error?.message || gError?.message}</small></p>
-    }
-
-    if (token) {
-        navigate(from, { replace: true });
+    if (error || gError || rError) {
+        signInError = <p className='text-red-500'><small>{error?.message || gError?.message || rError?.message}</small></p>
     }
 
     const onSubmit = data => {
@@ -52,10 +43,9 @@ const Login = () => {
     }
 
     const resetPassword = async () => {
-        console.log(resetEmail)
         if (resetEmail) {
             await sendPasswordResetEmail(resetEmail);
-            toast('Sent email');
+            toast('Send Password Reset Email');
         }
         else {
             toast('please enter your email address');

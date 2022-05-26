@@ -21,7 +21,7 @@ const SignUp = () => {
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
     const [token] = useToken(user || gUser);
-    console.log(gUser)
+
     const navigate = useNavigate();
 
     let signInError;
@@ -41,7 +41,6 @@ const SignUp = () => {
     const onSubmit = async data => {
         await createUserWithEmailAndPassword(data.email, data.password);
         await updateProfile({ displayName: data.name });
-        console.log('update done');
         if (createUserWithEmailAndPassword) {
             toast('Create Account Successful')
         }
