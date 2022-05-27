@@ -22,7 +22,7 @@ import NavBar from './pages/Shared/NavBar';
 
 function App() {
   return (
-    <div className='max-w-7xl mx-auto'>
+    <div className='xl:max-w-7xl mx-auto'>
       <NavBar></NavBar>
       <Routes>
         <Route path='/' element={<Home></Home>}></Route>
